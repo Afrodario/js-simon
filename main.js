@@ -1,32 +1,47 @@
 let container = document.getElementById("container");
 let innerTimer = document.getElementById("timer");
+let resultBox = document.getElementById("result");
 let randomArray = [];
 let targetArray = [];
 
+//Invoco la funzione di generazione numeri casuali
 randomArrayGenerator(container, randomArray);
 console.log(randomArray);
 
+//Imposto un contatore a 0
 let counter = 0;
-
+//Faccio partire il timer impostato a 30 secondi
 let timer = setInterval(
 
     function() {
 
+        //Incremento il contatore e lo mostro a schermo
         innerTimer.innerHTML = counter;
         counter++;
-        if (counter === 11) {
+        //A questo secondo nascondo i numeri casuali
+        if (counter === 31) {
+            container.classList.add("hidden");
+        } else if (counter === 32) {
+            //Reimposto il contatore a 0 e interrompo la funzione di timer
             counter = 0;
             clearInterval(timer);
-            console.log("OK!")
-            numberRequest();
 
-            const comparison = randomArray.filter(number => {
+            innerTimer.innerHTML = "";
+            //Invoco la funzione di richiesta dei numeri
+            numberRequest();
+            //Utilizzo un filter per mettere a confronto l'array casuale iniziale con quello generato dal prompt dell'utente
+            const comparisonArray = randomArray.filter(number => {
                 if (targetArray.includes(number)) {
                     return true;
                 }
                 return false;
-            }); 
-            console.log(comparison);
+            });
+
+            if (comparisonArray.length == 0) {
+                resultBox.innerHTML = "Non sei riuscito a ricordarti nessun numero. Prova ancora!";
+            } else {
+                resultBox.innerHTML = `I numeri che sei riuscito a ricordarti sono: <br>${comparisonArray}`;
+            }
 
         }
 
@@ -49,7 +64,7 @@ function randomArrayGenerator (container, randomArray) {
         randomArray.push(randomNumber(1, 100));
     }
     
-    return container.innerHTML = randomArray;
+    return container.innerHTML = `I numeri generati sono: ${randomArray}`;
 }
 
 //Funzione di richiesta numero
